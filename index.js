@@ -4,6 +4,7 @@ import { auth } from "./src/route/auth.js";
 import { transaction } from "./src/route/transation.js";
 import { wallet } from "./src/route/wallet.js";
 import {connection} from "./src/db/connect.js"
+import { expensehandler } from "./src/route/expensehandler.js";
 import cors from 'cors'
 dotenv.config()
 const app=express() 
@@ -34,6 +35,7 @@ app.use(morgan(function (tokens, req, res) {
 app.use('/auth',auth);
 app.use('/transation',transaction)
 app.use('/wallet',wallet)
+app.use('/expensehandler',expensehandler)
 
 // app.get('/:id', function (req, res) {
 //   console.log(req.params['id']);
