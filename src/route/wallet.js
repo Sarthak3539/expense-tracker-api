@@ -50,7 +50,7 @@ wallet.post('/add', async (req, res) => {
 
 wallet.post('/update', async (req, res) => {
     try {
-        if(typeof req.body.balance === 'number'){
+      
 
             const wallet = await Wallet.findOne({ "_id": req.body._id })
             
@@ -58,8 +58,8 @@ wallet.post('/update', async (req, res) => {
             const newWallet = await Wallet.findOneAndUpdate({ _id: req.body._id }, NewUpdate);
             
             res.json(newWallet)
-        }
-        else res.status(406).send({"message":e.message})
+        
+        
     }
     catch (e) {
 
