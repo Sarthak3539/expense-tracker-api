@@ -15,19 +15,6 @@ const userSchema=new Schema({
         type:String,
         required:true,
     },
-    expensehandler:{
-
-        totalIncome:{
-            type:Number,
-            required:true,
-            default:0
-        },
-        totalExpense:{
-            type:Number,
-            required:true,
-            default:0
-        }
-    }
 
 })
 

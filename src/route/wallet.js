@@ -8,21 +8,18 @@ wallet.get('/get',async(req,res)=>{
    
     try{
 
-        await Wallet.find({})
-        // We multiply the "limit" variables by one just to make sure we pass a number and not a string
+        await Wallet.find({ email: req.header('email') })
         .limit(req.query._limit * 1)
-        // I don't think i need to explain the math here
         .skip((req.query._page - 1) * req.query._limit)
-        // We sort the data by the date of their creation in descending order (user 1 instead of -1 to get ascending order)
-        .sort({ createdAt: -1 })
-        
-        .then(async(wallets)=>{
-            const count = await Wallet.countDocuments();
-            res.json({wallets,count:Math.ceil(count / req.query._limit)})
+        // .sort({ createdAt: -1 })
+        .then(async (wallets) => {
+            const count = await Wallet.countDocuments({ email: req.header('email') });
+            res.json({ wallets, count: Math.ceil(count / (req.query._limit)) });
         })
-        .catch((e)=>{
-            res.status(404).send(e.message)
-        })
+        .catch((e) => {
+            res.status(404).send(e.message);
+        });
+    
 
 
     }
@@ -33,8 +30,9 @@ wallet.get('/get',async(req,res)=>{
 
 wallet.post('/add', async (req, res) => {
     try {
-
-        const newWallet = new Wallet({ ...req.body, income_this_month: req.body.balance })
+        const newWallet = new Wallet({ ...req.body, income_this_month: req.body.balance,expense_this_month:0 })
+        console.log(newWallet)
+        
         await newWallet.save()
             .then(() => {
                 res.json(newWallet)
@@ -83,3 +81,37 @@ wallet.post('/delete', async(req, res) => {
         res.send(e.message)
     }
 })
+wallet.get("/total", async (req, res) => {
+    const email  = req.header('email');
+    if (!email) {
+      return res.status(400).json({ error: "Email is required in request body" });
+    }
+  
+    await Wallet.aggregate([
+      { $match: { email } },
+      {
+        $group: {
+          _id: "$email",
+          total_income_this_month: { $sum: "$income_this_month" },
+          total_expense_this_month: { $sum: "$expense_this_month" }
+        }
+      },
+      {
+        $project: {
+          email: "$_id",
+          total_income_this_month: 1,
+          total_expense_this_month: 1,
+          _id: 0
+        }
+      }
+    ])
+    .exec()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+  });
+  

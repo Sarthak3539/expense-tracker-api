@@ -12,8 +12,7 @@ const transactionSchema=new Schema({
     },
     date:{
         type:Date,
-        default:Date.now("DD-MM-YYYY"),
-        required:true,
+        required: true,
     },
     category:{
         type:String,
