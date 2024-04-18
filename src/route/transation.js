@@ -75,7 +75,7 @@ transaction.post('/add', async (req, res) => {
 transaction.post('/update', async (req, res) => {
 
     try {
-       if(!(req.body.expense=== 'number')) res.status(400).send(e.message)
+    
         const transaction = await Transaction.findOne({ "_id": req.body._id })
         const new_wallet_id = req.body.wallet_id
         const old_wallet_id = transaction.wallet_id
