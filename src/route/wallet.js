@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import e, { Router } from 'express'
 import { Wallet } from '../db/schema/wallet.js'
 
 export const wallet = Router()
@@ -31,7 +31,7 @@ wallet.get('/get',async(req,res)=>{
 wallet.post('/add', async (req, res) => {
     try {
         const newWallet = new Wallet({ ...req.body, income_this_month: req.body.balance,expense_this_month:0 })
-        console.log(newWallet)
+       
         
         await newWallet.save()
             .then(() => {
@@ -50,12 +50,16 @@ wallet.post('/add', async (req, res) => {
 
 wallet.post('/update', async (req, res) => {
     try {
-        const wallet = await Wallet.findOne({ "_id": req.body._id })
-        
-        const NewUpdate = (req.body.balance > wallet.balance) == 0 ? ({ ...req.body,expense_this_month: wallet.expense_this_month + (req.body.balance - wallet.balance) }) : ({ ...req.body,income_this_month: wallet.income_this_month + (req.body.balance - wallet.balance) })
-        const newWallet = await Wallet.findOneAndUpdate({ _id: req.body._id }, NewUpdate);
+        if(typeof req.body.balance === 'number'){
 
-        res.json(newWallet)
+            const wallet = await Wallet.findOne({ "_id": req.body._id })
+            
+            const NewUpdate = (req.body.balance > wallet.balance) == 0 ? ({ ...req.body,expense_this_month: wallet.expense_this_month + (req.body.balance - wallet.balance) }) : ({ ...req.body,income_this_month: wallet.income_this_month + (req.body.balance - wallet.balance) })
+            const newWallet = await Wallet.findOneAndUpdate({ _id: req.body._id }, NewUpdate);
+            
+            res.json(newWallet)
+        }
+        else res.status(406).send({"message":e.message})
     }
     catch (e) {
 

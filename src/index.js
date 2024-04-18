@@ -1,9 +1,9 @@
 import express from "express"
 import dotenv from "dotenv"
-import { auth } from "./src/route/auth.js";
-import { transaction } from "./src/route/transation.js";
-import { wallet } from "./src/route/wallet.js";
-import {connection} from "./src/db/connect.js"
+import { auth } from "./route/auth.js";
+import { transaction } from "./route/transation.js";
+import { wallet } from "./route/wallet.js";
+import {connection} from "./db/connect.js"
 import cors from 'cors'
 dotenv.config()
 const app=express() 
@@ -56,3 +56,4 @@ const server = async () => {
   
 
   server();
+  export default app
