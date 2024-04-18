@@ -35,10 +35,9 @@ app.use('/auth',auth);
 app.use('/transation',transaction)
 app.use('/wallet',wallet)
 
-// app.get('/:id', function (req, res) {
-//   console.log(req.params['id']);
-//   res.send();
-// })
+app.get('/', function (req, res) {
+  res.send("hello sarthak");
+})
 
 const server = async () => {
     try {
